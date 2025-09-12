@@ -1,22 +1,23 @@
-// const map=`MMMRRRR
-// MOMRRRR
-// MMMYBBB
-// GGMYBNB
-// GGMYBBB
-// GGGYYYB
-// YYYYYYB`;
-const map = `MMMMMMMMM
-MOOCCCCGM
-MCCCCCCGM
-MWRYYYYGM
-MWRBYBYBM
-MWRBBBBBM
-MWRBBBBBM
-RWRBPPPPB
-RRRBBBBBB`;
+// map=[],document.querySelectorAll('.queens-cell-with-border').forEach(function(e){
+//     let _cc = /cell-color-(\d+)/.exec(e.getAttribute('class'))
+//     let _c = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[_cc[1]];
+//     map.push(_c);
+// })
+// for(let i = Math.sqrt(map.length), j = 1, k = 0; j <= i; j++, k++) map.splice((i*j)+k,0,'\n')s
+// console.log(map.join(''))
+const map = `AAAAABBCCDD
+AAAAAABBCDD
+AAAAAAACCED
+AAAAAAAAFEE
+AAAAAAAAFFE
+GAAAAAAAAFF
+GGGAAAAAAAA
+HGGGAAAAAAA
+HHIJJAAAAAA
+KHIIJIAAAAA
+KKKIIIAAAAA`;
 const startAt = Date.now();
 const size = map.split('\n').pop().length; // calculate puzzle size
-
 // get colors zones
 function zones(){
     z = new Map();
@@ -35,9 +36,10 @@ function draw(_m){
 }
 
 // sort zones by surface
+let _z = zones();
 let _zz = [];
-for(let [_color, _area] of zones()) {
-    // console.log(_area)
+for(let [_color, _area] of _z) {
+    console.log(_color)
     let _row = _area[_area.length-1].row - _area[0].row + 1; 
     let [..._copy] = _area; 
     _copy.sort((f,s)=>f.col-s.col);
@@ -48,10 +50,10 @@ for(let [_color, _area] of zones()) {
     });
 }
 let _zzz = _zz.sort((s,e)=>s.s-e.s);
-
+// console.log(_z)
 
 let _m = matrix();
-let _z = zones();
+// let _z = zones();
 (function(_zz){
  
     for(let i = 0;i < _zz.length ;){
