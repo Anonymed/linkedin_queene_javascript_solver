@@ -17,4 +17,17 @@ PPRROOAAAY
 ```
 
 as you see every color is represented by a lettre (dont use * astrix because the script use it internally for marking cells)
+
+NOTE: you can generate map from web console by running the following code but before that you have to be in the game tab
+
+```javascript
+map=[],document.querySelectorAll('.queens-cell-with-border').forEach(function(e){
+    let _cc = /cell-color-(\d+)/.exec(e.getAttribute('class'))
+    let _c = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[_cc[1]];
+    map.push(_c);
+})
+for(let i = Math.sqrt(map.length), j = 1, k = 0; j <= i; j++, k++) map.splice((i*j)+k,0,'\n')s
+console.log(map.join(''))
+```
+
 ### 2 - run the script using nodejs or in you navigator
