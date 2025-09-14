@@ -1,23 +1,25 @@
-// map=[],document.querySelectorAll('.queens-cell-with-border').forEach(function(e){
+// let map=[];
+// document.querySelectorAll('.queens-cell-with-border').forEach(function(e){
 //     let _cc = /cell-color-(\d+)/.exec(e.getAttribute('class'))
 //     let _c = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[_cc[1]];
 //     map.push(_c);
 // })
-// for(let i = Math.sqrt(map.length), j = 1, k = 0; j <= i; j++, k++) map.splice((i*j)+k,0,'\n')s
-// console.log(map.join(''))
-const map = `AAAAABBCCDD
-AAAAAABBCDD
-AAAAAAACCED
-AAAAAAAAFEE
-AAAAAAAAFFE
-GAAAAAAAAFF
-GGGAAAAAAAA
-HGGGAAAAAAA
-HHIJJAAAAAA
-KHIIJIAAAAA
-KKKIIIAAAAA`;
+// for(let i = Math.sqrt(map.length), j = 1, k = 0; j <= i; j++, k++) map.splice((i*j)+k,0,'\n');
+// map = map.join('');
+// console.log(map)
+const map = `AAAAAAAGGCD
+AAAAAAGGCCD
+AAAAGGGCCDD
+AAAAAGGGCDD
+AAEGGGCCCDD
+EAEEGGGHHHI
+EEEGGGHHFHI
+BJEEGGGFFKI
+BJGGGFFFKKI
+BJJGGGIKKKI
+BBBGIIIIIII`;
 const startAt = Date.now();
-const size = map.split('\n').pop().length; // calculate puzzle size
+const size = map.trim().split('\n').pop().length; // calculate puzzle size
 // get colors zones
 function zones(){
     z = new Map();
@@ -32,14 +34,14 @@ function zones(){
 function matrix(){return map.split('\n').map(r=>r.split(''))}
 
 function draw(_m){
-    console.log(_m.map(r=>r.join('\t')).join('\n\n'))
+    console.log(_m.map(r=>r.join('\t')).join('\n\n'));
 }
 
 // sort zones by surface
 let _z = zones();
 let _zz = [];
 for(let [_color, _area] of _z) {
-    console.log(_color)
+    // console.log(_color)
     let _row = _area[_area.length-1].row - _area[0].row + 1; 
     let [..._copy] = _area; 
     _copy.sort((f,s)=>f.col-s.col);
@@ -50,21 +52,25 @@ for(let [_color, _area] of _z) {
     });
 }
 let _zzz = _zz.sort((s,e)=>s.s-e.s);
-// console.log(_z)
+console.log(_zzz)
 
 let _m = matrix();
-// let _z = zones();
+
 (function(_zz){
  
     for(let i = 0;i < _zz.length ;){
         let z = _zz[i];
-        for(let c of _z.get(z.c)){
-            if(_m[c.row][c.col] == 'x') {
-                _m[c.row][c.col] = z.c
-                continue;
-            }
-            if(_m[c.row].indexOf('x')<0){
-                if(_m.map(e=>e[c.col]).indexOf('x')<0){
+        let _v = _z.get(z.c);
+        let j = -1;
+        for(let k = 0; k < _v.length; k++){
+            let c = _v[k];
+            if(_m[c.row][c.col] == 'x') j = k;
+            _m[c.row][c.col] = z.c;
+        }
+        for(j += 1; j < _v.length; j++){
+            let c = _v[j];
+            if(_m[c.row].indexOf('x')<0){ // not in the same row
+                if(_m.map(e=>e[c.col]).indexOf('x')<0){ // not in the same coll
                     
                     let rb = _m[c.row-1] ?? [];
                     let ra = _m[c.row+1] ?? [];
@@ -85,19 +91,18 @@ let _m = matrix();
                             ra[c.col+1] ?? '_'
                         ]
                     ];
-                    // console.log(s_area.map(e=>e.join('\t')).join('\n'),'\n');
                     let surounded = s_area.find(r=>r.indexOf('x')>=0)
-                    // console.log('surrounded: ',surounded)
-                    if(!surounded){
+                    if(!surounded){ // not surrounded 
                         _m[c.row][c.col] = 'x';
-                        console.log('checked cell: ', z.c,c.row,c.col)
+                        console.log('checked cell: ', z.c,c.row+1,c.col+1)
                         i++; // to go next color
+                        console.log('got to ', (_zz[i]??{c:0}).c);
                         break;
                     }
                 }    
             }
         } 
-
+        
         let checked = _z.get(z.c).find(c=>_m[c.row][c.col] == 'x')
         if(!checked) {  
             console.log('im in ', z.c ,' back to ', _zz[i-1].c)
